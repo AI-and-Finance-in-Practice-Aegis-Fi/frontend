@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
 const sidebarItems = [
@@ -29,17 +32,41 @@ const settingCards = [
       ["이상 지출 감지", "평소 대비 200%"],
     ],
   },
-  {
-    title: "Notification",
-    rows: [
-      ["정책 위반 알림", "ON"],
-      ["SaaS 갱신 알림", "ON"],
-      ["주간 리포트", "OFF"],
-    ],
-  },
+];
+
+type NotificationKey =
+  | "policyAlert"
+  | "budgetAlert"
+  | "renewalAlert"
+  | "weeklyReport";
+
+const notificationItems: Array<{
+  key: NotificationKey;
+  label: string;
+}> = [
+  { key: "policyAlert", label: "정책 위반 알림" },
+  { key: "budgetAlert", label: "예산 초과 알림" },
+  { key: "renewalAlert", label: "SaaS 갱신 알림" },
+  { key: "weeklyReport", label: "주간 리포트 이메일" },
 ];
 
 export default function SettingsPage() {
+  const [notifications, setNotifications] = useState<
+    Record<NotificationKey, boolean>
+  >({
+    policyAlert: true,
+    budgetAlert: true,
+    renewalAlert: true,
+    weeklyReport: false,
+  });
+
+  function toggleNotification(key: NotificationKey) {
+    setNotifications((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  }
+
   return (
     <main className="min-h-screen bg-[#050608] text-[#f8f8df]">
       <section className="mx-auto grid min-h-screen w-full max-w-[1280px] px-5 py-10 sm:px-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:px-12 lg:py-14">
@@ -144,6 +171,40 @@ export default function SettingsPage() {
                 </div>
               </article>
             ))}
+
+            <article className="rounded-2xl border border-white/[0.08] bg-[#131a25] p-6 shadow-xl shadow-black/30">
+              <h2 className="text-lg font-black text-[#fbfbdc]">Notification</h2>
+              <div className="mt-6 grid gap-4">
+                {notificationItems.map((item) => {
+                  const enabled = notifications[item.key];
+
+                  return (
+                    <div
+                      key={item.key}
+                      className="border-b border-white/[0.06] pb-4 last:border-b-0 last:pb-0"
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="text-sm font-medium text-zinc-400">
+                          {item.label}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleNotification(item.key)}
+                          className={`min-w-16 rounded-full px-4 py-1.5 text-xs font-bold text-white transition hover:opacity-85 ${
+                            enabled ? "bg-blue-500" : "bg-red-500"
+                          }`}
+                        >
+                          {enabled ? "ON" : "OFF"}
+                        </button>
+                      </div>
+                      <p className="mt-2 text-xs font-medium text-zinc-600">
+                        현재 상태: {enabled ? "활성화됨" : "비활성화됨"}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
           </section>
         </div>
       </section>
