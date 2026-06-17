@@ -1,5 +1,7 @@
 .next
+.next/
 node_modules
+node_modules/
 out
 dist
 .env
@@ -9,3 +11,5 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 dev-server.log
+dev-server*.log
+*.tsbuildinfo
