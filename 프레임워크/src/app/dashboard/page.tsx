@@ -13,17 +13,32 @@ const stats = [
 ];
 
 const payments = [
-  { service: "AWS", category: "클라우드", amount: "12,400,000원", status: "정상" },
-  { service: "Slack", category: "SaaS 구독", amount: "320,000원", status: "정상" },
-  { service: "GS25", category: "편의점", amount: "56,000원", status: "검토중" },
-  { service: "Notion", category: "SaaS 구독", amount: "180,000원", status: "정상" },
-  { service: "Adobe", category: "디자인 툴", amount: "650,000원", status: "위반" },
+  { employee: "김태훈", department: "마케팅", merchant: "Adobe Creative", amount: "320,000원", status: "정상" },
+  { employee: "박소현", department: "영업", merchant: "스시 오마카세", amount: "890,000원", status: "위반 감지" },
+  { employee: "최민준", department: "개발", merchant: "AWS", amount: "1,240,000원", status: "정상" },
+  { employee: "정유미", department: "인사", merchant: "GS25 편의점", amount: "58,000원", status: "검토 중" },
+  { employee: "이지수", department: "재무", merchant: "Notion", amount: "180,000원", status: "정상" },
 ];
 
 const alerts = [
-  { label: "정책 위반 감지", time: "방금" },
-  { label: "예산 SaaS 초과", time: "14분 전" },
-  { label: "소프트웨어 비용 증가", time: "34분 전" },
+  {
+    title: "정책 위반 결제 감지",
+    description: "김태훈 · 마케팅 · 스시 한도 초과",
+    time: "방금",
+    dot: "bg-[#f1d9df] shadow-[0_0_12px_rgba(241,217,223,0.75)]",
+  },
+  {
+    title: "미사용 SaaS 9개 감지",
+    description: "45일+ 미접속 포함",
+    time: "1시간 전",
+    dot: "bg-[#8fc5d4] shadow-[0_0_12px_rgba(143,197,212,0.7)]",
+  },
+  {
+    title: "AI 최적화 리포트 생성됨",
+    description: "약 210,000원 절감 가능",
+    time: "3시간 전",
+    dot: "bg-[#9aa7e8] shadow-[0_0_12px_rgba(154,167,232,0.7)]",
+  },
 ];
 
 const saasUsage = [
@@ -43,9 +58,9 @@ const budgets = [
 ];
 
 function statusClass(status: string) {
-  if (status === "정상") return "bg-emerald-400/10 text-emerald-300";
-  if (status === "검토중") return "bg-amber-300/10 text-amber-200";
-  return "bg-rose-400/10 text-rose-300";
+  if (status === "정상") return "text-[#fbfbdc]";
+  if (status === "검토 중") return "text-amber-200";
+  return "text-rose-300";
 }
 
 export default function DashboardPage() {
@@ -70,27 +85,34 @@ export default function DashboardPage() {
             </Link>
           }
         >
-          <div className="mt-5 overflow-x-auto">
+          <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[620px] text-left text-sm">
-              <thead className="border-b border-white/[0.08] text-xs text-zinc-500">
+              <thead className="border-y border-white/10 text-xs text-zinc-500">
                 <tr>
-                  <th className="py-3 pr-4 font-semibold">서비스</th>
-                  <th className="py-3 pr-4 font-semibold">카테고리</th>
-                  <th className="py-3 pr-4 font-semibold">금액</th>
-                  <th className="py-3 pr-4 font-semibold">상태</th>
+                  <th className="py-3 pr-4 font-semibold">직원/부서</th>
+                  <th className="py-3 pr-4 font-semibold">가맹점</th>
+                  <th className="py-3 pr-4 text-right font-semibold">금액</th>
+                  <th className="py-3 pl-6 pr-2 text-right font-semibold">상태</th>
                 </tr>
               </thead>
               <tbody>
                 {payments.map((payment) => (
                   <tr
-                    key={`${payment.service}-${payment.amount}`}
-                    className="border-b border-white/[0.06] last:border-0"
+                    key={`${payment.employee}-${payment.amount}`}
+                    className="border-b border-white/10 last:border-0"
                   >
-                    <td className="py-3.5 pr-4 font-semibold text-zinc-200">{payment.service}</td>
-                    <td className="py-3.5 pr-4 text-zinc-500">{payment.category}</td>
-                    <td className="py-3.5 pr-4 text-zinc-300">{payment.amount}</td>
-                    <td className="py-3.5 pr-4">
-                      <span className={`rounded-full px-3 py-1 text-xs font-bold ${statusClass(payment.status)}`}>
+                    <td className="py-4 pr-4">
+                      <span className="block text-[13px] font-black leading-5 text-[#fbfbdc]">
+                        {payment.employee}
+                      </span>
+                      <span className="mt-1 block text-[11px] font-semibold leading-4 text-zinc-600">
+                        {payment.department}
+                      </span>
+                    </td>
+                    <td className="py-4 pr-4 text-[13px] font-black text-zinc-200">{payment.merchant}</td>
+                    <td className="py-4 pr-4 text-right text-[13px] font-bold text-zinc-200">{payment.amount}</td>
+                    <td className="py-4 pl-6 pr-2 text-right">
+                      <span className={`text-[12px] font-black ${statusClass(payment.status)}`}>
                         {payment.status}
                       </span>
                     </td>
@@ -101,19 +123,30 @@ export default function DashboardPage() {
           </div>
         </DataCard>
 
-        <DataCard title="알림">
-          <ul className="mt-5 grid gap-5">
+        <DataCard title="알림" className="flex min-h-[330px] flex-col">
+          <ul className="mt-4 border-t border-white/10">
             {alerts.map((alert) => (
-              <li key={alert.label} className="flex items-center justify-between gap-4">
-                <span className="flex items-center gap-3 text-sm font-semibold text-zinc-300">
-                  <span className="size-2 rounded-full bg-[#8290a5]" />
-                  {alert.label}
+              <li
+                key={alert.title}
+                className="grid grid-cols-[14px_minmax(0,1fr)_62px] gap-3 border-b border-white/10 py-4"
+              >
+                <span className={`mt-1.5 size-2 rounded-full ${alert.dot}`} />
+                <span>
+                  <span className="block text-[13px] font-black leading-5 text-[#fbfbdc]">
+                    {alert.title}
+                  </span>
+                  <span className="mt-1 block text-[11px] font-semibold leading-5 text-zinc-500">
+                    {alert.description}
+                  </span>
                 </span>
-                <span className="text-xs font-medium text-zinc-600">{alert.time}</span>
+                <span className="pt-1 text-right text-xs font-semibold text-zinc-500">{alert.time}</span>
               </li>
             ))}
           </ul>
-          <Link href="/dashboard/alerts" className="mt-8 inline-block text-xs font-bold text-[#8290a5]">
+          <Link
+            href="/dashboard/alerts"
+            className="mt-auto inline-block pt-7 text-xs font-bold text-[#9aa7e8] transition hover:text-white"
+          >
             모든 알림 보기 →
           </Link>
         </DataCard>
