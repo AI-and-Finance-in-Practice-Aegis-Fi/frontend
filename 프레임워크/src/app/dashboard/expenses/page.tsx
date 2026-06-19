@@ -1,9 +1,26 @@
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 
+type DetectionType = "warning" | "success" | "pending";
+
 const aiResults = [
-  { label: "정책 위반", value: "3건", helper: "즉시 검토 필요", tone: "text-rose-300" },
-  { label: "정상 결제", value: "847건", helper: "전월 대비 +5%", tone: "text-cyan-200" },
-  { label: "승인 대기", value: "1건", helper: "검토 대기 중", tone: "text-zinc-300" },
+  {
+    label: "정책 위반",
+    value: "3건",
+    helper: "즉시 검토 필요",
+    type: "warning" as const,
+  },
+  {
+    label: "정상 결제",
+    value: "847건",
+    helper: "전월 대비 +5%",
+    type: "success" as const,
+  },
+  {
+    label: "승인 대기",
+    value: "1건",
+    helper: "검토 대기 중",
+    type: "pending" as const,
+  },
 ];
 
 const payments = [
@@ -96,6 +113,67 @@ function getProgressColor(value: number) {
   return "bg-yellow-100";
 }
 
+function detectionTone(type: DetectionType) {
+  if (type === "warning") {
+    return {
+      badge: "bg-rose-500/10 text-rose-300",
+      status: "text-rose-400",
+    };
+  }
+
+  if (type === "success") {
+    return {
+      badge: "bg-cyan-500/10 text-cyan-300",
+      status: "text-cyan-300",
+    };
+  }
+
+  return {
+    badge: "bg-slate-500/20 text-yellow-200",
+    status: "text-yellow-200",
+  };
+}
+
+function DetectionIcon({ type }: { type: DetectionType }) {
+  if (type === "warning") {
+    return (
+      <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
+        <path
+          d="M12 4.5 21 20H3L12 4.5Z"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.9"
+        />
+        <path d="M12 9.5v4.5M12 17.2h.01" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.9" />
+      </svg>
+    );
+  }
+
+  if (type === "success") {
+    return (
+      <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
+        <path
+          d="m7 12 3.2 3.2L17.5 8"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2.2"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
+      <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="1.9" />
+      <path d="M12 8v4.6l3 2" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.9" />
+    </svg>
+  );
+}
+
 function ProgressRow({
   label,
   value,
@@ -145,26 +223,30 @@ export default function ExpensesPage() {
           </div>
 
           <div className="lg:pl-8">
-            <h2 className="text-base font-black text-[#fbfbdc]">AI 감지 결과</h2>
-            <div className="mt-4 grid gap-3">
-              {aiResults.map((item) => (
-                <div
-                  key={item.label}
-                  className="grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-white/[0.06] bg-black/15 px-4 py-3"
-                >
-                  <span className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-[#141b27] text-xs text-[#8290a5]">
-                    △
-                  </span>
-                  <div>
-                    <p className="text-xs font-bold text-zinc-500">{item.label}</p>
-                    <p className={`mt-1 text-lg font-black ${item.tone}`}>{item.value}</p>
+            <h2 className="text-lg font-black text-[#fbfbdc]">AI 감지 결과</h2>
+            <div className="mt-5">
+              {aiResults.map((item) => {
+                const tone = detectionTone(item.type);
+
+                return (
+                  <div
+                    key={item.label}
+                    className="flex min-h-[70px] items-center gap-4 border-b border-white/10 py-4 last:border-b-0"
+                  >
+                    <span className={`flex size-11 shrink-0 items-center justify-center rounded-full ${tone.badge}`}>
+                      <DetectionIcon type={item.type} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-slate-300">{item.label}</p>
+                      <p className="mt-1 text-3xl font-black leading-none text-[#ffffe3]">{item.value}</p>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-4 text-right">
+                      <span className={`text-sm font-semibold ${tone.status}`}>{item.helper}</span>
+                      <span className="text-xl font-light text-slate-500">›</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4 text-right">
-                    <span className="text-xs font-semibold text-zinc-500">{item.helper}</span>
-                    <span className="text-zinc-600">›</span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

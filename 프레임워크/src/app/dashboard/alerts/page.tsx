@@ -1,45 +1,47 @@
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 
+type AlertIconType = "shield" | "warning" | "chart" | "card" | "calendar";
+
 const stats = [
-  { label: "전체 알림", value: "12건", helper: "오늘 발생", tone: "bg-blue-400/10" },
-  { label: "위험 알림", value: "3건", helper: "즉시 확인 필요", tone: "bg-rose-400/10" },
-  { label: "주의 알림", value: "6건", helper: "검토 권장", tone: "bg-amber-300/10" },
-  { label: "정보 알림", value: "3건", helper: "참고 사항", tone: "bg-slate-400/10" },
+  { label: "전체 알림", value: "12건", helper: "오늘 발생", icon: "i", color: "text-[#fbd5d9]" },
+  { label: "위험 알림", value: "3건", helper: "즉시 확인 필요", icon: "△", color: "text-[#61a4bc]" },
+  { label: "주의 알림", value: "6건", helper: "검토 권장", icon: "i", color: "text-[#7b93c9]" },
+  { label: "정보 알림", value: "3건", helper: "참고 사항", icon: "✓", color: "text-[#ffffe3]" },
 ];
 
 const alerts = [
   {
-    icon: "shield",
+    icon: "shield" as const,
     title: "정책 위반 결제 감지",
-    description: "김태훈 · 마케팅 · 스시 오마카세 초과 (700,000원)",
-    time: "14:32",
+    description: "김태훈 · 마케팅 · 식비 한도 초과 (700,000원)",
+    time: "방금",
   },
   {
-    icon: "warning",
+    icon: "warning" as const,
     title: "미사용 SaaS 9개 감지",
-    description: "Salesforce 65석, Zoom 99석 등 45일+ 미사용",
+    description: "Salesforce(65석), Zoom(99석) 등 45일+ 미접속",
     time: "13:00",
   },
   {
-    icon: "chart",
+    icon: "chart" as const,
     title: "AI 최적화 리포트 생성됨",
-    description: "약 210,000원 절감 가능 시나리오 포함",
+    description: "월 210,000원 절감 가능 시나리오 포함",
     time: "10:00",
   },
   {
-    icon: "card",
+    icon: "card" as const,
     title: "법인카드 한도 근접",
     description: "마케팅팀 카드 · 월 한도 90% 사용",
     time: "09:15",
   },
   {
-    icon: "shield",
+    icon: "shield" as const,
     title: "정책 위반 결제 감지",
     description: "이정민 · 개발팀 · 해외 결제 승인 필요",
     time: "어제 17:45",
   },
   {
-    icon: "calendar",
+    icon: "calendar" as const,
     title: "구독 갱신 예정",
     description: "Adobe Creative Cloud · 5일 후 자동 갱신",
     time: "어제 13:20",
@@ -67,63 +69,77 @@ function Card({
   );
 }
 
-function AlertIcon({ type }: { type: string }) {
-  if (type === "warning") {
-    return (
-      <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
-        <path
-          d="M12 4.5 21 20H3L12 4.5Z"
-          fill="none"
-          stroke="currentColor"
-          strokeLinejoin="round"
-          strokeWidth="1.8"
-        />
-        <path d="M12 9v5" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
-        <path d="M12 17.2h.01" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      </svg>
-    );
-  }
-
-  if (type === "chart") {
-    return (
-      <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
-        <path d="M6 18V11" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
-        <path d="M12 18V7" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
-        <path d="M18 18v-4" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
-      </svg>
-    );
-  }
-
-  if (type === "card") {
-    return (
-      <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
-        <rect x="4" y="6" width="16" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M4 10h16" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M8 15h4" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
-      </svg>
-    );
-  }
-
-  if (type === "calendar") {
-    return (
-      <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
-        <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M8 3v4M16 3v4M4 10h16" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
-        <path d="M8 14h.01M12 14h.01M16 14h.01" stroke="currentColor" strokeLinecap="round" strokeWidth="2.2" />
-      </svg>
-    );
-  }
-
+function AlertIcon({ type }: { type: AlertIconType }) {
   return (
-    <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
-      <path
-        d="M12 4 19 7v5.5c0 4.1-2.8 6.4-7 7.5-4.2-1.1-7-3.4-7-7.5V7l7-3Z"
-        fill="none"
-        stroke="currentColor"
-        strokeLinejoin="round"
-        strokeWidth="1.8"
-      />
-    </svg>
+    <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-[#202734] text-slate-300">
+      {type === "shield" ? (
+        <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true">
+          <path
+            d="M12 4 19 7v5.5c0 4-2.7 6.4-7 7.5-4.3-1.1-7-3.5-7-7.5V7l7-3Z"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.9"
+          />
+        </svg>
+      ) : null}
+      {type === "warning" ? (
+        <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true">
+          <path
+            d="M12 4.5 21 20H3L12 4.5Z"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.9"
+          />
+          <path d="M12 9.5v4.5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.9" />
+          <path d="M12 17.2h.01" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
+        </svg>
+      ) : null}
+      {type === "chart" ? (
+        <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true">
+          <path d="M6 18V12" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.2" />
+          <path d="M12 18V7" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.2" />
+          <path d="M18 18v-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.2" />
+        </svg>
+      ) : null}
+      {type === "card" ? (
+        <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true">
+          <rect
+            x="4"
+            y="6.5"
+            width="16"
+            height="11"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            strokeLinejoin="round"
+            strokeWidth="1.9"
+          />
+          <path d="M4 10h16" fill="none" stroke="currentColor" strokeWidth="1.9" />
+          <path d="M8 14.5h4" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.9" />
+        </svg>
+      ) : null}
+      {type === "calendar" ? (
+        <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true">
+          <rect
+            x="4"
+            y="5.5"
+            width="16"
+            height="14.5"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            strokeLinejoin="round"
+            strokeWidth="1.9"
+          />
+          <path d="M8 3.5v4M16 3.5v4M4 10h16" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.9" />
+          <path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.2" />
+        </svg>
+      ) : null}
+    </span>
   );
 }
 
@@ -136,48 +152,47 @@ export default function AlertsPage() {
     >
       <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.label} className="p-5">
-            <div className={`mb-4 flex size-9 items-center justify-center rounded-lg ${stat.tone}`}>
-              <span className="size-2 rounded-full bg-[#fbfbdc]" />
+          <Card key={stat.label} className="min-h-[112px] px-5 py-4">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="flex size-6 items-center justify-center rounded-full border border-white/10 bg-white/10 text-[11px] font-black text-slate-300">
+                {stat.icon}
+              </span>
+              <p className="text-xs font-bold text-slate-400">{stat.label}</p>
             </div>
-            <p className="text-xs font-bold text-zinc-500">{stat.label}</p>
-            <p className="mt-2 text-2xl font-black text-[#fbfbdc]">{stat.value}</p>
-            <p className="mt-2 text-xs font-semibold text-[#8290a5]">{stat.helper}</p>
+            <p className={`mt-2 text-[28px] font-black leading-none ${stat.color}`}>{stat.value}</p>
+            <p className="mt-4 text-xs font-semibold text-slate-500">{stat.helper}</p>
           </Card>
         ))}
       </section>
 
       <section className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
         <Card className="overflow-hidden">
-          <div className="flex items-center justify-between gap-4 border-b border-white/[0.1] px-5 py-4">
-            <h2 className="text-lg font-black text-[#fbfbdc]">알림 목록</h2>
-            <button type="button" className="text-xs font-bold text-zinc-400 hover:text-white">
-              최신 순⌄
-            </button>
+          <div className="border-b border-white/10 px-5 py-5">
+            <h2 className="text-xl font-black text-[#ffffe3]">알림 목록</h2>
           </div>
 
           <div>
             {alerts.map((alert) => (
               <div
                 key={`${alert.title}-${alert.time}-${alert.description}`}
-                className="grid gap-3 border-b border-white/[0.08] px-5 py-3.5 last:border-0 sm:grid-cols-[18px_42px_minmax(0,1fr)_72px] sm:items-center"
+                className="flex min-h-[78px] flex-col gap-3 border-b border-white/10 px-5 py-4 last:border-0 sm:flex-row sm:items-center"
               >
-                <span className="hidden size-4 rounded-[3px] border border-slate-600/70 bg-[#0c111a] sm:block" />
-                <span className="hidden size-10 items-center justify-center rounded-lg border border-white/[0.07] bg-[#202837] text-slate-300 sm:flex">
-                  <AlertIcon type={alert.icon} />
-                </span>
-                <div>
-                  <h3 className="text-[13px] font-black leading-5 text-[#fbfbdc]">{alert.title}</h3>
-                  <p className="mt-0.5 text-[11px] font-semibold leading-5 text-zinc-500">{alert.description}</p>
+                <span className="hidden size-4 shrink-0 rounded-sm border border-white/20 bg-black/10 sm:block" />
+                <AlertIcon type={alert.icon} />
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-[15px] font-black leading-6 text-[#ffffe3]">{alert.title}</h3>
+                  <p className="mt-1 text-xs font-semibold leading-5 text-slate-400">{alert.description}</p>
                 </div>
-                <span className="text-xs font-semibold text-zinc-500 sm:text-right">{alert.time}</span>
+                <span className="shrink-0 text-xs font-semibold text-slate-400 sm:w-20 sm:text-right">
+                  {alert.time}
+                </span>
               </div>
             ))}
           </div>
 
-          <div className="flex flex-col gap-3 border-t border-white/[0.08] px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs font-semibold text-zinc-500">총 12건의 알림</p>
-            <div className="flex items-center gap-2 text-xs font-bold text-zinc-500">
+          <div className="flex flex-col gap-3 border-t border-white/10 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm font-semibold text-slate-400">총 12건의 알림</p>
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
               <button type="button" className="px-2 py-1 hover:text-white">
                 ‹
               </button>

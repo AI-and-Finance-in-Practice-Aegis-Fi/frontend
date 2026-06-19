@@ -58,7 +58,7 @@ const budgets = [
 ];
 
 function statusClass(status: string) {
-  if (status === "정상") return "text-[#fbfbdc]";
+  if (status === "정상") return "text-emerald-400";
   if (status === "검토 중") return "text-amber-200";
   return "text-rose-300";
 }
