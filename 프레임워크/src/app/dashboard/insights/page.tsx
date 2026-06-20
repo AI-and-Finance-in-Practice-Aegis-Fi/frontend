@@ -162,7 +162,7 @@ export default async function InsightsPage() {
       <DashboardShell
         activeHref="/dashboard/insights"
         title="AI 금융 운영 리포트"
-        description="GPT-4o 기반 개인화 분석 · 2026년 6월 13일 생성 · 비용 패턴, 정책 위반, SaaS 사용 현황을 AI가 자동 분석하여 요약합니다."
+        description={`GPT-4o 기반 개인화 분석 · ${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 ${new Date().getDate()}일 생성 · 비용 패턴, 정책 위반, SaaS 사용 현황을 AI가 자동 분석하여 요약합니다.`}
       >
         <section className="mt-7 grid gap-4 lg:grid-cols-3">
           {stats.map((stat) => (

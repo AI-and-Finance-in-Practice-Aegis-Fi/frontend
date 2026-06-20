@@ -210,7 +210,7 @@ export default async function ExpensesPage() {
       <DashboardShell
         activeHref="/dashboard/expenses"
         title="법인카드 결제"
-        description="2026년 6월 13일 기준"
+        description={`${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 ${new Date().getDate()}일 기준`}
       >
         <Card className="mt-7 p-6">
           <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_1.3fr] lg:divide-x lg:divide-white/10">

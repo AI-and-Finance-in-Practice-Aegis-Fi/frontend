@@ -2,7 +2,6 @@ import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import {
   getPendingApprovals,
   getDashboardSummary,
-  getAuditLog,
   formatKRW,
   formatDate,
 } from "@/lib/api";
@@ -109,7 +108,6 @@ export default async function AlertsPage() {
     const [pendingApprovals, summary] = await Promise.all([
       getPendingApprovals(),
       getDashboardSummary(),
-      getAuditLog(20),
     ]);
 
     // Build alert list
@@ -162,7 +160,7 @@ export default async function AlertsPage() {
       <DashboardShell
         activeHref="/dashboard/alerts"
         title="알림 센터"
-        description="2026년 6월 13일 기준"
+        description={`${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 ${new Date().getDate()}일 기준`}
       >
         <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {stats.map((stat) => (

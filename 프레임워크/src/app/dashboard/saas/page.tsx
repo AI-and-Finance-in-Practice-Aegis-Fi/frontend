@@ -133,7 +133,7 @@ export default async function SaasPage() {
       <DashboardShell
         activeHref="/dashboard/saas"
         title="SaaS 구독 관리"
-        description="2026년 6월 13일 기준"
+        description={`${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 ${new Date().getDate()}일 기준`}
       >
         <section className="mt-7 grid gap-4 lg:grid-cols-3">
           {stats.map((stat) => (

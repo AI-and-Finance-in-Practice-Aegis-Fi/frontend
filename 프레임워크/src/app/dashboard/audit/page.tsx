@@ -26,13 +26,6 @@ function FilterButton({ children }: { children: React.ReactNode }) {
   );
 }
 
-const activityLegend = [
-  { label: "승인", value: "54%", count: "25건", color: "#f3cbd3" },
-  { label: "수정", value: "21%", count: "10건", color: "#8fc5d4" },
-  { label: "조회", value: "17%", count: "8건", color: "#96a8d8" },
-  { label: "삭제", value: "8%", count: "4건", color: "#f4eecb" },
-];
-
 function eventTypeLabel(eventType: string): { type: string; tone: string } {
   if (eventType.includes("APPROVED")) {
     return { type: "결제 승인", tone: "bg-yellow-200/20 text-yellow-100" };
@@ -53,6 +46,24 @@ export default async function AuditPage() {
   try {
     const auditLogs = await getAuditLog(30);
 
+    const today = new Date();
+    const thirtyDaysAgo = new Date(today);
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+    const fmtShort = (d: Date) =>
+      `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
+    const dateRangeLabel = `날짜 범위: ${fmtShort(thirtyDaysAgo)}~${fmtShort(today)}`;
+
+    const catColors: Record<string, string> = {
+      "결제 승인": "#f3cbd3",
+      "결제 차단": "#8fc5d4",
+      "이상 감지": "#96a8d8",
+      "정책 변경": "#f4eecb",
+    };
+    const catCounts: Record<string, number> = { "결제 승인": 0, "결제 차단": 0, "이상 감지": 0, "정책 변경": 0 };
+    for (const log of auditLogs) {
+      const { type } = eventTypeLabel(log.event_type);
+      if (type in catCounts) catCounts[type]++;
+    }
     const totalCount = auditLogs.length;
     const importantCount = auditLogs.filter(
       (l) => l.event_type.includes("BLOCKED") || l.event_type.includes("ANOMALY"),
@@ -93,7 +104,7 @@ export default async function AuditPage() {
         description={`최근 ${totalCount}건의 활동 기록`}
       >
         <div className="mt-5 flex flex-wrap justify-end gap-2">
-          <FilterButton>날짜 범위: 2026.05.14~2026.06.13</FilterButton>
+          <FilterButton>{dateRangeLabel}</FilterButton>
           <FilterButton>전체 사용자⌄</FilterButton>
           <FilterButton>필터</FilterButton>
         </div>
@@ -204,14 +215,17 @@ export default async function AuditPage() {
                 </div>
               </div>
               <div className="grid gap-3">
-                {activityLegend.map((item) => (
-                  <div key={item.label} className="grid grid-cols-[12px_1fr_42px_40px] items-center gap-3 text-xs font-semibold">
-                    <span className="size-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                    <span className="text-zinc-400">{item.label}</span>
-                    <span className="text-zinc-300">{item.value}</span>
-                    <span className="text-zinc-500">({item.count})</span>
-                  </div>
-                ))}
+                {Object.entries(catCounts).map(([label, count]) => {
+                  const pct = totalCount > 0 ? Math.round((count / totalCount) * 100) : 0;
+                  return (
+                    <div key={label} className="grid grid-cols-[12px_1fr_42px_40px] items-center gap-3 text-xs font-semibold">
+                      <span className="size-2.5 rounded-full" style={{ backgroundColor: catColors[label] }} />
+                      <span className="text-zinc-400">{label}</span>
+                      <span className="text-zinc-300">{pct}%</span>
+                      <span className="text-zinc-500">({count}건)</span>
+                    </div>
+                  );
+                })}
                 <button
                   type="button"
                   className="mt-4 rounded-lg border border-white/10 px-4 py-2.5 text-xs font-bold text-zinc-400 transition hover:bg-white/5 hover:text-white"
