@@ -95,7 +95,11 @@ export function Topbar({ title, description }: TopbarProps) {
             <span className="absolute -top-3 right-8 size-7 rotate-45 rounded-sm bg-[#4b4f54]" />
             <div className="relative flex items-center justify-between gap-4">
               <h2 className="text-lg font-semibold text-white">최근 활동</h2>
-              <button type="button" className="text-sm font-semibold text-white/70 transition hover:text-white">
+              <button
+                type="button"
+                onClick={() => setBadgeCount(0)}
+                className="text-sm font-semibold text-white/70 transition hover:text-white"
+              >
                 모두 읽음
               </button>
             </div>
