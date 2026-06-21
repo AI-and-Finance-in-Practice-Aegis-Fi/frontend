@@ -212,20 +212,20 @@ export default function InsightsClient({
 
           <div className="lg:pl-8">
             <h2 className="text-base font-black text-[#fbfbdc]">지출 증가 요인 분석</h2>
-            <div className="mt-6 grid gap-6 sm:grid-cols-[minmax(0,180px)_minmax(0,1fr)] sm:items-center">
-              <svg viewBox="0 0 220 140" className="w-full" role="img" aria-label="지출 증가 요인 반원형 차트">
+            <div className="mt-6 grid grid-cols-[minmax(0,160px)_minmax(0,1fr)] items-center gap-4">
+              <svg viewBox="0 0 220 140" className="w-full overflow-hidden" role="img" aria-label="지출 증가 요인 반원형 차트">
                 {/* background */}
                 <path d="M35 115a75 75 0 0 1 150 0" fill="none" stroke="#253244" strokeWidth="28" strokeLinecap="butt" />
                 {arcPaths.map((d, i) => (
                   <path key={i} d={d} fill="none" stroke={factors[i]?.color ?? "#888"} strokeWidth="28" strokeLinecap="butt" />
                 ))}
               </svg>
-              <div className="grid gap-3">
+              <div className="grid min-w-0 gap-3">
                 {factors.map((factor) => (
-                  <div key={factor.label} className="grid grid-cols-[10px_1fr_42px] items-center gap-3 text-xs font-semibold">
-                    <span className="size-2.5 rounded-full" style={{ backgroundColor: factor.color }} />
-                    <span className="text-zinc-400">{factor.label}</span>
-                    <span className="text-zinc-300">{factor.percent}%</span>
+                  <div key={factor.label} className="grid grid-cols-[10px_minmax(0,1fr)_auto] items-center gap-3 text-xs font-semibold">
+                    <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: factor.color }} />
+                    <span className="min-w-0 truncate text-zinc-400">{factor.label}</span>
+                    <span className="shrink-0 tabular-nums text-zinc-300">{factor.percent}%</span>
                   </div>
                 ))}
               </div>
