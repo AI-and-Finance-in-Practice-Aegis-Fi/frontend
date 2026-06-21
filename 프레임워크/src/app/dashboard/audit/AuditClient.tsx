@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import type { AuditLog } from "@/lib/api";
 import { formatTime } from "@/lib/api";
+import { downloadReportAsPdf } from "@/lib/pdf";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -687,8 +688,17 @@ export default function AuditClient({ initialLogs }: { initialLogs: AuditLog[] }
                   </div>
                 )}
               </div>
-              <div className="border-t border-white/10 px-6 py-4">
-                <button type="button" onClick={() => setShowAiDialog(false)} className="w-full rounded-lg border border-white/10 py-2.5 text-xs font-bold text-zinc-400 hover:bg-white/5">닫기</button>
+              <div className="flex flex-wrap gap-3 border-t border-white/10 px-6 py-4">
+                {aiState === "done" && aiReport && (
+                  <button
+                    type="button"
+                    onClick={() => downloadReportAsPdf("AI 이상 활동 분석 보고서", aiReport)}
+                    className="rounded-lg bg-[#f1d9df] px-5 py-2.5 text-xs font-black text-[#130b10] transition hover:bg-[#f7e6eb]"
+                  >
+                    PDF 다운로드
+                  </button>
+                )}
+                <button type="button" onClick={() => setShowAiDialog(false)} className="rounded-lg border border-white/10 px-5 py-2.5 text-xs font-bold text-zinc-400 hover:bg-white/5 hover:text-white">닫기</button>
               </div>
             </div>
           </div>

@@ -4,6 +4,7 @@ import { FormEvent, useMemo, useState } from "react";
 
 import type { SaasSubscription } from "@/lib/api";
 import { formatKRW, saasStatus, saasUsageRate } from "@/lib/api";
+import { downloadReportAsPdf } from "@/lib/pdf";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -547,18 +548,29 @@ export default function SaasClient({
                   </div>
                 )}
               </div>
-              {aiState === "done" && reduction && reduction.cut > 0 && (
-                <div className="flex gap-3 border-t border-white/10 px-6 py-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowAiDialog(false);
-                      setShowConfirmDialog(true);
-                    }}
-                    className="rounded-lg bg-[#f1d9df] px-5 py-2.5 text-xs font-black text-[#130b10] transition hover:bg-[#f7e6eb]"
-                  >
-                    좌석 축소 적용
-                  </button>
+              {aiState === "done" && (
+                <div className="flex flex-wrap gap-3 border-t border-white/10 px-6 py-4">
+                  {reduction && reduction.cut > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAiDialog(false);
+                        setShowConfirmDialog(true);
+                      }}
+                      className="rounded-lg bg-[#f1d9df] px-5 py-2.5 text-xs font-black text-[#130b10] transition hover:bg-[#f7e6eb]"
+                    >
+                      좌석 축소 적용
+                    </button>
+                  )}
+                  {aiReport && (
+                    <button
+                      type="button"
+                      onClick={() => downloadReportAsPdf("AI 최적화 분석 보고서", aiReport, topWasted?.subscription_name)}
+                      className="rounded-lg border border-white/10 px-5 py-2.5 text-xs font-bold text-zinc-400 transition hover:bg-white/5 hover:text-white"
+                    >
+                      PDF 다운로드
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={() => setShowAiDialog(false)}

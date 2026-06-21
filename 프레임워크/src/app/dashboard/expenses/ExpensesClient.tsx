@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import type { DepartmentBudget, Transaction } from "@/lib/api";
 import { formatDate, formatKRW } from "@/lib/api";
+import { downloadReportAsPdf } from "@/lib/pdf";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -757,7 +758,7 @@ export default function ExpensesClient({
                   </div>
                 )}
               </div>
-              <div className="flex gap-3 border-t border-white/10 px-6 py-4">
+              <div className="flex flex-wrap gap-3 border-t border-white/10 px-6 py-4">
                 <Link
                   href="/dashboard/settings"
                   className="rounded-lg bg-[#f1d9df] px-5 py-2.5 text-xs font-black text-[#130b10] transition hover:bg-[#f7e6eb]"
@@ -765,6 +766,15 @@ export default function ExpensesClient({
                 >
                   정책 설정 바로가기
                 </Link>
+                {aiState === "done" && aiReport && (
+                  <button
+                    type="button"
+                    onClick={() => downloadReportAsPdf("AI 비용 이상 분석 보고서", aiReport)}
+                    className="rounded-lg border border-white/10 px-5 py-2.5 text-xs font-bold text-zinc-400 transition hover:bg-white/5 hover:text-white"
+                  >
+                    PDF 다운로드
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setShowAiDialog(false)}
