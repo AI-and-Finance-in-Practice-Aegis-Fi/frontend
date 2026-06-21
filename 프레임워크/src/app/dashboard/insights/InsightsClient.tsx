@@ -56,21 +56,6 @@ interface Props {
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
-function semiArcPoint(cx: number, cy: number, r: number, fraction: number) {
-  const angle = Math.PI * (1 - fraction);
-  return {
-    x: +(cx + r * Math.cos(angle)).toFixed(1),
-    y: +(cy - r * Math.sin(angle)).toFixed(1),
-  };
-}
-
-function semiArcPath(cx: number, cy: number, r: number, f1: number, f2: number): string {
-  const p1 = semiArcPoint(cx, cy, r, f1);
-  const p2 = semiArcPoint(cx, cy, r, f2);
-  const large = f2 - f1 > 0.5 ? 1 : 0;
-  return `M${p1.x} ${p1.y} A${r} ${r} 0 ${large} 1 ${p2.x} ${p2.y}`;
-}
-
 function buildInsightsReport(
   insights: Insight[],
   recommendations: Recommendation[],
@@ -149,17 +134,6 @@ export default function InsightsClient({
   const [showAnomalyDialog, setShowAnomalyDialog] = useState(false);
   const [guideTarget, setGuideTarget] = useState<Recommendation | null>(null);
 
-  // Build SVG arc paths from dynamic factors
-  const arcPaths: string[] = [];
-  let cumulative = 0;
-  for (const f of factors) {
-    const frac = f.percent / 100;
-    if (frac > 0) {
-      arcPaths.push(semiArcPath(110, 115, 75, cumulative, cumulative + frac));
-    }
-    cumulative += frac;
-  }
-
   function handleDownload() {
     const report = buildInsightsReport(insights, recommendations, savings, anomalies);
     downloadReportAsPdf("AI 금융 운영 리포트", report);
@@ -212,23 +186,24 @@ export default function InsightsClient({
 
           <div className="lg:pl-8">
             <h2 className="text-base font-black text-[#fbfbdc]">지출 증가 요인 분석</h2>
-            <div className="mt-6 grid grid-cols-[minmax(0,160px)_minmax(0,1fr)] items-center gap-4">
-              <svg viewBox="0 0 220 140" className="w-full overflow-hidden" role="img" aria-label="지출 증가 요인 반원형 차트">
-                {/* background */}
-                <path d="M35 115a75 75 0 0 1 150 0" fill="none" stroke="#253244" strokeWidth="28" strokeLinecap="butt" />
-                {arcPaths.map((d, i) => (
-                  <path key={i} d={d} fill="none" stroke={factors[i]?.color ?? "#888"} strokeWidth="28" strokeLinecap="butt" />
-                ))}
-              </svg>
-              <div className="grid min-w-0 gap-3">
-                {factors.map((factor) => (
-                  <div key={factor.label} className="grid grid-cols-[10px_minmax(0,1fr)_auto] items-center gap-3 text-xs font-semibold">
-                    <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: factor.color }} />
-                    <span className="min-w-0 truncate text-zinc-400">{factor.label}</span>
+            <div className="mt-6 grid gap-4">
+              {factors.map((factor) => (
+                <div key={factor.label} className="grid min-w-0 gap-1.5">
+                  <div className="flex items-center justify-between gap-3 text-xs font-semibold">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: factor.color }} />
+                      <span className="min-w-0 truncate text-zinc-400">{factor.label}</span>
+                    </div>
                     <span className="shrink-0 tabular-nums text-zinc-300">{factor.percent}%</span>
                   </div>
-                ))}
-              </div>
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]">
+                    <div
+                      className="h-full rounded-full"
+                      style={{ width: `${factor.percent}%`, backgroundColor: factor.color }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
             <button
               type="button"

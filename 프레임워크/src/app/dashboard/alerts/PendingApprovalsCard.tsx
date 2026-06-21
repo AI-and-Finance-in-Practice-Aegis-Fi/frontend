@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import type { PendingApproval } from "@/lib/api";
@@ -139,10 +140,12 @@ export default function PendingApprovalsCard({
   initialItems: PendingApproval[];
 }) {
   const [items, setItems] = useState<PendingApproval[]>(initialItems);
+  const router = useRouter();
 
   async function handleDecide(approvalId: number, decision: boolean, reason: string) {
     await decideApproval(approvalId, decision, reason);
     setItems((prev) => prev.filter((i) => i.approval_id !== approvalId));
+    router.refresh();
   }
 
   if (items.length === 0) return null;

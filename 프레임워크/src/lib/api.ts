@@ -152,8 +152,12 @@ export function getGhostAccounts(limit = 100): Promise<GhostAccount[]> {
   return apiFetch<GhostAccount[]>(`/api/v1/saas/ghost-accounts?limit=${limit}`);
 }
 
-export function getPendingApprovals(): Promise<PendingApproval[]> {
-  return apiFetch<PendingApproval[]>("/api/v1/approvals/pending");
+export async function getPendingApprovals(): Promise<PendingApproval[]> {
+  const res = await fetch(`${BACKEND_URL}/api/v1/approvals/pending`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`API error ${res.status} for /api/v1/approvals/pending`);
+  return res.json() as Promise<PendingApproval[]>;
 }
 
 export function getAuditLog(limit = 30): Promise<AuditLog[]> {
