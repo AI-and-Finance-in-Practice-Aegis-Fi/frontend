@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 import type { DepartmentBudget, Transaction } from "@/lib/api";
@@ -214,6 +214,14 @@ export default function ExpensesClient({
   departmentUsage: { label: string; value: number }[];
 }) {
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
+
+  // Refresh transaction list on mount to pick up payments made since SSR cache was built
+  useEffect(() => {
+    fetch("/api/transactions?limit=200")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => { if (data) setTransactions(data); })
+      .catch(() => {});
+  }, []);
 
   // Add payment dialog
   const [showAddDialog, setShowAddDialog] = useState(false);

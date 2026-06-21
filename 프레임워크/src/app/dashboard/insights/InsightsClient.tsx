@@ -212,8 +212,8 @@ export default function InsightsClient({
 
           <div className="lg:pl-8">
             <h2 className="text-base font-black text-[#fbfbdc]">지출 증가 요인 분석</h2>
-            <div className="mt-6 grid gap-6 sm:grid-cols-[180px_minmax(0,1fr)] sm:items-center">
-              <svg viewBox="0 0 220 140" className="h-36 w-full" role="img" aria-label="지출 증가 요인 반원형 차트">
+            <div className="mt-6 grid gap-6 sm:grid-cols-[minmax(0,180px)_minmax(0,1fr)] sm:items-center">
+              <svg viewBox="0 0 220 140" className="w-full" role="img" aria-label="지출 증가 요인 반원형 차트">
                 {/* background */}
                 <path d="M35 115a75 75 0 0 1 150 0" fill="none" stroke="#253244" strokeWidth="28" strokeLinecap="butt" />
                 {arcPaths.map((d, i) => (

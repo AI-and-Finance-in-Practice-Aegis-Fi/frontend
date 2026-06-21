@@ -175,9 +175,9 @@ export function formatKRW(amount: number | string): string {
   return "₩" + Math.round(num).toLocaleString("ko-KR");
 }
 
-/** ISO UTC string → "MM-DD HH:mm" */
+/** ISO UTC string → "MM-DD HH:mm" (KST = UTC+9) */
 export function formatDate(iso: string): string {
-  const d = new Date(iso);
+  const d = new Date(new Date(iso).getTime() + 9 * 60 * 60 * 1000);
   const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
   const dd = String(d.getUTCDate()).padStart(2, "0");
   const hh = String(d.getUTCHours()).padStart(2, "0");
@@ -185,9 +185,9 @@ export function formatDate(iso: string): string {
   return `${mm}-${dd} ${hh}:${min}`;
 }
 
-/** ISO UTC string → "HH:mm" */
+/** ISO UTC string → "HH:mm" (KST = UTC+9) */
 export function formatTime(iso: string): string {
-  const d = new Date(iso);
+  const d = new Date(new Date(iso).getTime() + 9 * 60 * 60 * 1000);
   const hh = String(d.getUTCHours()).padStart(2, "0");
   const min = String(d.getUTCMinutes()).padStart(2, "0");
   return `${hh}:${min}`;
