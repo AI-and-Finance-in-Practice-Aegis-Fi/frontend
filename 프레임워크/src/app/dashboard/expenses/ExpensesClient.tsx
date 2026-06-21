@@ -149,7 +149,7 @@ function getProgressColor(value: number) {
 
 function ProgressRow({ label, value, amount }: { label: string; value: number; amount?: string }) {
   return (
-    <div className="grid grid-cols-[82px_minmax(0,1fr)_52px] items-center gap-3 text-xs font-semibold">
+    <div className="grid grid-cols-[82px_minmax(0,1fr)_auto] items-center gap-3 text-xs font-semibold">
       <span className="text-zinc-400">{label}</span>
       <div className="h-2 overflow-hidden rounded-full bg-slate-700/70">
         <div className={`h-full rounded-full ${getProgressColor(value)}`} style={{ width: `${value}%` }} />
