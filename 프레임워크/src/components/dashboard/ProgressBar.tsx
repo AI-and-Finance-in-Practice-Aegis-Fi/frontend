@@ -14,8 +14,8 @@ export function ProgressBar({ label, value }: ProgressBarProps) {
   return (
     <div>
       <div className="mb-2 flex items-center justify-between gap-4 text-xs font-semibold">
-        <span className="text-zinc-400">{label}</span>
-        <span className="text-[#fbfbdc]">{value}%</span>
+        <span className="min-w-0 truncate text-zinc-400">{label}</span>
+        <span className="shrink-0 text-[#fbfbdc]">{value}%</span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-slate-700/70">
         <div

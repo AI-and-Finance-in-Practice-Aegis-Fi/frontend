@@ -330,8 +330,8 @@ export default function SaasClient({
                 const deptName = deptMap[item.department_id] ?? `부서 ${item.department_id}`;
                 return (
                   <tr key={item.subscription_id} className="border-b border-white/[0.06] last:border-0">
-                    <td className="px-5 py-4 font-semibold text-[#fbfbdc]">{item.subscription_name}</td>
-                    <td className="px-4 py-4 text-zinc-400">{deptName}</td>
+                    <td className="max-w-[200px] px-5 py-4 font-semibold text-[#fbfbdc]"><span className="block truncate">{item.subscription_name}</span></td>
+                    <td className="max-w-[120px] px-4 py-4 text-zinc-400"><span className="block truncate">{deptName}</span></td>
                     <td className="px-4 py-4 text-zinc-400">{item.total_seats}석</td>
                     <td className="px-4 py-4">
                       <ProgressLine value={usage} />
