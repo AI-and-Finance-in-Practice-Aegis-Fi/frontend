@@ -168,6 +168,19 @@ export function getAnomalyReport(): Promise<DeptAnomaly[]> {
   return apiFetch<DeptAnomaly[]>("/api/v1/reports/anomaly");
 }
 
+export async function decideApproval(
+  approvalId: number,
+  decision: boolean,
+  reason: string,
+): Promise<void> {
+  const res = await fetch(`/api/approvals/${approvalId}/decide`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ decision, reason }),
+  });
+  if (!res.ok) throw new Error(`결정 처리 실패 (${res.status})`);
+}
+
 // ── Utility helpers ─────────────────────────────────────────────────────────
 
 export function formatKRW(amount: number | string): string {

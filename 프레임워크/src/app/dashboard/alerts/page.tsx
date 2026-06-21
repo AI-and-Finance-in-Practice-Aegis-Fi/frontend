@@ -7,6 +7,7 @@ import {
 } from "@/lib/api";
 
 import AlertsClient, { type AlertItem } from "./AlertsClient";
+import PendingApprovalsCard from "./PendingApprovalsCard";
 
 function StatCard({ label, value, helper, icon, color }: {
   label: string;
@@ -36,17 +37,8 @@ export default async function AlertsPage() {
       getDashboardSummary(),
     ]);
 
+    // Pending approvals are shown in the dedicated action card — not duplicated in the list
     const alerts: AlertItem[] = [];
-
-    for (const approval of pendingApprovals) {
-      alerts.push({
-        icon: "shield",
-        title: "승인 대기 결제 감지",
-        description: `${approval.employee_name} · ${approval.department_name} · ${approval.merchant_name} (${formatKRW(approval.amount)})`,
-        time: formatDate(approval.requested_at),
-        type: "danger",
-      });
-    }
 
     if (summary.saas.ghost_account_count > 0) {
       alerts.push({
@@ -71,8 +63,8 @@ export default async function AlertsPage() {
 
     const dangerCount = pendingApprovals.length;
     const cautionCount = nearLimitDepts.length + (summary.saas.ghost_account_count > 0 ? 1 : 0);
-    const infoCount = Math.max(0, alerts.length - dangerCount - cautionCount);
-    const totalCount = alerts.length;
+    const infoCount = Math.max(0, alerts.length - cautionCount);
+    const totalCount = dangerCount + cautionCount + infoCount;
 
     const stats = [
       { label: "전체 알림", value: `${totalCount}건`, helper: "오늘 발생", icon: "i", color: "text-[#fbd5d9]" },
@@ -96,6 +88,7 @@ export default async function AlertsPage() {
           ))}
         </section>
 
+        <PendingApprovalsCard initialItems={pendingApprovals} />
         <AlertsClient alerts={alerts} />
       </DashboardShell>
     );
