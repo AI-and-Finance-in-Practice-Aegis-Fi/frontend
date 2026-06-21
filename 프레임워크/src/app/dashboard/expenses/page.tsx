@@ -19,11 +19,14 @@ export default async function ExpensesPage() {
       .slice(0, 5)
       .map((d) => ({ label: d.department_name, value: Math.round(d.spend_rate * 100) }));
 
+    const kst = new Date(Date.now() + 9 * 60 * 60 * 1000);
+    const kstLabel = `${kst.getUTCFullYear()}년 ${kst.getUTCMonth() + 1}월 ${kst.getUTCDate()}일 기준`;
+
     return (
       <DashboardShell
         activeHref="/dashboard/expenses"
         title="법인카드 결제"
-        description={`${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 ${new Date().getDate()}일 기준`}
+        description={kstLabel}
       >
         <ExpensesClient
           initialTransactions={transactions}

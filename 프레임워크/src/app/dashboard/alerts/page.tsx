@@ -81,11 +81,14 @@ export default async function AlertsPage() {
       { label: "정보 알림", value: `${infoCount}건`, helper: "참고 사항", icon: "✓", color: "text-[#ffffe3]" },
     ];
 
+    const kst = new Date(Date.now() + 9 * 60 * 60 * 1000);
+    const kstLabel = `${kst.getUTCFullYear()}년 ${kst.getUTCMonth() + 1}월 ${kst.getUTCDate()}일 기준`;
+
     return (
       <DashboardShell
         activeHref="/dashboard/alerts"
         title="알림 센터"
-        description={`${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 ${new Date().getDate()}일 기준`}
+        description={kstLabel}
       >
         <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {stats.map((stat) => (

@@ -29,7 +29,7 @@ interface AddForm {
   user_input_reason: string;
 }
 
-const CATEGORIES = ["Food", "Transport", "Entertainment", "Office", "Other"];
+const CATEGORIES = ["SaaS", "Entertainment", "Office Supply", "Travel", "Cloud", "Food", "Education", "Design/SaaS", "AI/SaaS"];
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -229,7 +229,7 @@ export default function ExpensesClient({
     employee_name: "",
     department_name: departmentBudgets[0]?.department_name ?? "",
     merchant_name: "",
-    category: "Food",
+    category: "SaaS",
     amount: "",
     user_input_reason: "",
   });
@@ -300,7 +300,7 @@ export default function ExpensesClient({
     };
     setTransactions((prev) => [newTx, ...prev]);
     setShowAddDialog(false);
-    setAddForm({ employee_name: "", department_name: departmentBudgets[0]?.department_name ?? "", merchant_name: "", category: "Food", amount: "", user_input_reason: "" });
+    setAddForm({ employee_name: "", department_name: departmentBudgets[0]?.department_name ?? "", merchant_name: "", category: "SaaS", amount: "", user_input_reason: "" });
   }
 
   function openActionDialog(tx: Transaction) {
@@ -413,7 +413,7 @@ export default function ExpensesClient({
         <button
           type="button"
           onClick={() => {
-            setAddForm({ employee_name: "", department_name: departmentBudgets[0]?.department_name ?? "", merchant_name: "", category: "Food", amount: "", user_input_reason: "" });
+            setAddForm({ employee_name: "", department_name: departmentBudgets[0]?.department_name ?? "", merchant_name: "", category: "SaaS", amount: "", user_input_reason: "" });
             setShowAddDialog(true);
           }}
           className="rounded-lg bg-[#f1d9df] px-4 py-2 text-xs font-black text-[#130b10] transition hover:bg-[#f7e6eb]"
@@ -450,7 +450,7 @@ export default function ExpensesClient({
                     <td className="px-5 py-4 text-zinc-400">{formatDate(t.payment_time)}</td>
                     <td className="px-4 py-4 font-semibold text-[#fbfbdc]">{t.employee_name}</td>
                     <td className="px-4 py-4 text-zinc-400">{t.department_name}</td>
-                    <td className="px-4 py-4 text-zinc-300">{t.merchant_name}</td>
+                    <td className="max-w-[160px] px-4 py-4 text-zinc-300"><span className="block truncate">{t.merchant_name}</span></td>
                     <td className="px-4 py-4 text-zinc-400">{t.category}</td>
                     <td className="px-4 py-4 text-zinc-300">{formatKRW(parseFloat(t.amount))}</td>
                     <td className="px-4 py-4">
@@ -520,7 +520,7 @@ export default function ExpensesClient({
                 type="button"
                 onClick={handlePolicyAnalysis}
                 disabled={aiState === "loading"}
-                className="rounded-lg bg-[#f1d9df] px-5 py-2.5 text-xs font-black text-[#130b10] transition hover:bg-[#f7e6eb] disabled:opacity-50"
+                className="rounded-lg bg-[#f1d9df] px-5 py-2.5 text-xs font-black text-[#130b10] transition hover:bg-[#f7e6eb] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {aiState === "loading" ? "AI 분석 중..." : "정책 수정"}
               </button>

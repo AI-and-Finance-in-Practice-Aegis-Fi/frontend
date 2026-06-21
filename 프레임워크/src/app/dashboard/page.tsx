@@ -9,7 +9,6 @@ import {
   getRecentTransactions,
   getSaasSubscriptions,
   formatKRW,
-  formatDate,
   saasUsageRate,
 } from "@/lib/api";
 
@@ -96,8 +95,11 @@ export default async function DashboardPage() {
       });
     }
 
+    const kst = new Date(Date.now() + 9 * 60 * 60 * 1000);
+    const kstLabel = `${kst.getUTCFullYear()}년 ${kst.getUTCMonth() + 1}월 ${kst.getUTCDate()}일 기준`;
+
     const saasUsage = [...subscriptions]
-      .sort((a, b) => saasUsageRate(b) - saasUsageRate(a))
+      .sort((a, b) => b.used_seats - a.used_seats)
       .slice(0, 5)
       .map((sub) => ({
         label: sub.subscription_name,
@@ -116,7 +118,7 @@ export default async function DashboardPage() {
       <DashboardShell
         activeHref="/dashboard"
         title="대시보드"
-        description={`${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 ${new Date().getDate()}일 기준`}
+        description={kstLabel}
       >
         <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {stats.map((stat) => (

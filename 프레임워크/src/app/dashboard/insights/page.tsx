@@ -124,13 +124,13 @@ export default async function InsightsPage() {
       },
     ];
 
-    const today = new Date();
+    const kst = new Date(Date.now() + 9 * 60 * 60 * 1000);
 
     return (
       <DashboardShell
         activeHref="/dashboard/insights"
         title="AI 금융 운영 리포트"
-        description={`GPT-4o 기반 개인화 분석 · ${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일 생성`}
+        description={`GPT-4o 기반 개인화 분석 · ${kst.getUTCFullYear()}년 ${kst.getUTCMonth() + 1}월 ${kst.getUTCDate()}일 생성`}
       >
         <InsightsClient
           stats={stats}
